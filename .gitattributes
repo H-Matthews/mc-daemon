@@ -1,0 +1,8 @@
+# Force Unix line endings (LF) for Go source files on all platforms
+*.go text eol=lf
+
+# Force Unix line endings for workflow and configuration files
+*.yml text eol=lf
+*.yaml text eol=lf
+go.mod text eol=lf
+go.sum text eol=lf
