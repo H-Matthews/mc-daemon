@@ -29,3 +29,9 @@ go.work.sum
 
 # Editor/IDE
 .vscode/
+
+# Config files
+config.json
+config.yaml
+config.yml
+*.log
