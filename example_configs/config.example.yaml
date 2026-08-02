@@ -1,0 +1,11 @@
+# config.example.yaml
+
+java:
+  executable: "java"
+  extra_args:
+    - "-Xms1024M"
+    - "-Xmx2048M"
+
+paths:
+  install_dir: "./opt"
+  jar_file: "server.jar"
