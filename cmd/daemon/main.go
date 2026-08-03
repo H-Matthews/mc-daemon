@@ -1,15 +1,24 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log/slog"
+	"os/signal"
+	"syscall"
 
 	"mc-daemon/internal/config"
+	"mc-daemon/internal/config/installer"
 
 	"os"
 )
 
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+
+	// Cleanup signal notification resources when main exits
+	defer stop()
+
 	// Setup Logger Handler options
 	opts := &slog.HandlerOptions{
 		Level: slog.LevelDebug,
@@ -36,6 +45,21 @@ func main() {
 	}
 
 	rootLogger.Info("Loaded Configuration", "config", cfg)
+
+	installer, err := installer.New(&cfg, rootLogger)
+	if err != nil {
+		rootLogger.Error("fatal initialization failure", "error", err)
+	}
+
+	// Test URL (Vanilla Minecraft server JAR)
+	downloadUrl := "https://piston-data.mojang.com/v1/objects/823e2250d24b3ddac457a60c92a6a941943fcd6a/server.jar"
+
+	if err := installer.EnsureInstalled(ctx, downloadUrl); err != nil {
+		rootLogger.Error("Unble to ensure installation", "error", err)
+	}
+
+	rootLogger.Info("server binary setup complete")
+
 }
 
 func parseFlags() string {

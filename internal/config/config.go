@@ -14,6 +14,12 @@ import (
 
 // --- Struct Definitions ---
 
+type ServerConfig struct {
+	Type    string `json:"type" yaml:"type"`
+	Version string `json:"version" yaml:"version"`
+	Build   string `json:"build" yaml:"build"`
+}
+
 type JavaConfig struct {
 	Executable string   `json:"executable" yaml:"executable"`
 	ExtraArgs  []string `json:"extra_args" yaml:"extra_args"`
@@ -25,8 +31,9 @@ type PathConfig struct {
 }
 
 type Config struct {
-	Java  JavaConfig `json:"java" yaml:"java"`
-	Paths PathConfig `json:"paths" yaml:"paths"`
+	Java   JavaConfig   `json:"java" yaml:"java"`
+	Paths  PathConfig   `json:"paths" yaml:"paths"`
+	Server ServerConfig `json:"server" yaml:"server"`
 }
 
 // --- Factory Functions Definitions ---
@@ -41,6 +48,11 @@ func Default() Config {
 		Paths: PathConfig{
 			InstallDir: "./data",
 			JarFile:    "server.jar",
+		},
+		Server: ServerConfig{
+			Type:    "vanilla",
+			Version: "26.2",
+			Build:   "latest",
 		},
 	}
 }
@@ -138,10 +150,13 @@ func (c Config) Validate() error {
 // String implements fmt.Stringer interface for clean printing
 func (c Config) String() string {
 	return fmt.Sprintf(
-		"Config [Java Exec: %s | Args: %v | InstallDir: %s | Jarfile: %s]",
+		"Config [Java Exec: %s | Args: %v | InstallDir: %s | Jarfile: %s] | Server Type: %s | Version: %s | Build: %s",
 		c.Java.Executable,
 		c.Java.ExtraArgs,
 		c.Paths.InstallDir,
 		c.Paths.JarFile,
+		c.Server.Type,
+		c.Server.Version,
+		c.Server.Build,
 	)
 }

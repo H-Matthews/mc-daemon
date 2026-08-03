@@ -9,3 +9,8 @@ java:
 paths:
   install_dir: "./opt"
   jar_file: "server.jar"
+
+server:
+  type: "vanilla"
+  version: "26.2"
+  build: "latest"
